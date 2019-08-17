@@ -1,0 +1,5 @@
+name: ResourceWorld
+main: com.kabryxis.resourceworld.ResourceWorld
+version: 2.0.0
+api-version: 1.13
+author: [Kabryxis/Warren1001]
