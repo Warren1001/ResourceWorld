@@ -16,8 +16,6 @@ public class Gate {
 	private final Set<Block> portalBlocks = new HashSet<>(6);
 	private final Set<Block> cornerFrameBlocks = new HashSet<>(4);
 	
-	private final Set<Player> waitingPlayers = new HashSet<>();
-	
 	private final Axis axis;
 	
 	private Portal portal = null;
@@ -105,6 +103,10 @@ public class Gate {
 		return frameBlocks.contains(block) || portalBlocks.contains(block) || cornerFrameBlocks.contains(block);
 	}
 	
+	public boolean isNetherPortal() {
+		return frameBlocks.stream().allMatch(block -> block.getType() == Material.OBSIDIAN);
+	}
+	
 	public void construct() {
 		if(isFrameConstructed()) return;
 		frameBlocks.forEach(block -> block.setType(LocationHelper.PORTAL_FRAME_TYPE));
@@ -139,6 +141,8 @@ public class Gate {
 		Location to = player.getLocation().subtract(location.toVector()).add(otherGate.location.toVector());
 		to.setWorld(otherGate.location.getWorld());
 		player.teleport(to);
+		if(to.getWorld() == LocationHelper.RESOURCE_WORLD) player.sendTitle(ResourceWorld.TITLE, ResourceWorld.SUBTITLE,
+				ResourceWorld.FADE_IN, ResourceWorld.STAY, ResourceWorld.FADE_OUT);
 		return true;
 	}
 	
@@ -153,7 +157,7 @@ public class Gate {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return obj instanceof Gate && ((Gate)obj).location.equals(location);
+		return obj instanceof Gate && ((Gate)obj).location.getBlock().equals(location.getBlock());
 	}
 	
 }

@@ -78,14 +78,12 @@ public final class LocationHelper {
 			}
 		}
 		loc = checkValidSpawn(x, y, z);
-		long start = System.currentTimeMillis();
 		Random random = new Random();
 		while(loc == null) {
 			int rxo = random.nextInt(PORTAL_RELATIVE_SPAWN_RADIUS) - PORTAL_RELATIVE_SPAWN_RADIUS / 2;
 			int rzo = random.nextInt(PORTAL_RELATIVE_SPAWN_RADIUS) - PORTAL_RELATIVE_SPAWN_RADIUS / 2;
 			loc = checkValidSpawn(x + rxo, y, z + rzo);
 		}
-		long end = System.currentTimeMillis() - start;
 		return loc;
 	}
 	
@@ -128,6 +126,10 @@ public final class LocationHelper {
 			if(two) blocks.add(block.getRelative(lessX ? BlockFace.WEST : BlockFace.EAST));
 		}
 		return blocks.stream().filter(b -> b.getType() == Material.NETHER_PORTAL).findFirst().orElse(null);
+	}
+	
+	public static Gate getNewGateOfGateConstruction(Location loc) {
+		return getNewGateOfGateConstruction(searchForPortalBlock(loc));
 	}
 	
 	public static Gate getNewGateOfGateConstruction(Block block) {

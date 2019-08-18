@@ -1,9 +1,11 @@
 package com.kabryxis.resourceworld;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -17,8 +19,16 @@ import java.util.stream.Collectors;
 
 public class ResourceWorld extends JavaPlugin {
 	
+	public static String TITLE = ChatColor.GOLD + "Be warned!";
+	public static String SUBTITLE = ChatColor.GOLD + "This world resets regularly!";
+	public static int FADE_IN = 10;
+	public static int STAY = 70;
+	public static int FADE_OUT = 20;
+	
 	private final Set<Portal> portals = new HashSet<>();
 	private final Set<String> allowedWorlds = new HashSet<>();
+	
+	//private String defaultWorldName;
 	
 	@Override
 	public void onEnable() {
@@ -40,7 +50,12 @@ public class ResourceWorld extends JavaPlugin {
 		}
 		LocationHelper.PORTAL_SPAWN_RADIUS -= 4;
 		LocationHelper.PORTAL_RELATIVE_SPAWN_RADIUS = getConfig().getInt("portal-relative-spawn-radius", 500);
-		String resourceWorldName = getConfig().getString("world-name", "world_resource");
+		/*Properties properties = new Properties();
+		try {
+			properties.load(new BufferedReader(new FileReader("server.properties")));
+		} catch(IOException ignore) {}
+		defaultWorldName = properties.getProperty("level-name");*/
+		String resourceWorldName = getConfig().getString("world-name", /*defaultWorldName + */"world_resource");
 		if(resourceWorldName.isEmpty()) {
 			disablePlugin("Cannot create a resource world with an empty name.");
 			return;
@@ -54,6 +69,14 @@ public class ResourceWorld extends JavaPlugin {
 			disablePlugin("allowed-world-names must be a String or List containing allowed world names for portal creation");
 			return;
 		}
+		ConfigurationSection section = getConfig().getConfigurationSection("portal-message");
+		if(section != null) {
+			TITLE = ChatColor.translateAlternateColorCodes('&', section.getString("title", TITLE));
+			SUBTITLE = ChatColor.translateAlternateColorCodes('&', section.getString("subtitle", SUBTITLE));
+			FADE_IN = section.getInt("fade-in", FADE_IN);
+			STAY = section.getInt("stay", STAY);
+			FADE_OUT = section.getInt("fade-out", FADE_OUT);
+		}
 		loadPortalsFromDisk();
 		getServer().getPluginManager().registerEvents(new PortalListener(this), this);
 	}
@@ -62,6 +85,10 @@ public class ResourceWorld extends JavaPlugin {
 	public void onDisable() {
 		savePortalsToDisk();
 	}
+	
+	/*public String getDefaultWorldName() {
+		return defaultWorldName;
+	}*/
 	
 	public void loadPortalsFromDisk() {
 		portals.clear();

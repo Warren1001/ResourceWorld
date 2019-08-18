@@ -3,3 +3,9 @@ portal-spawn-radius: 5000 # radius from world-name's world SPAWNPOINT to allow p
 portal-relative-spawn-radius: 500 # bound to randomize portal spawn incase a 1to1 portal placement doesnt work. smaller numbers = closer to 1to1 placement, larger numbers = less chance to fail
 world-name: world_resource # name of resource world
 allowed-world-names: world # worlds portals can be built to the resource world. portals cannot be created in resource world, but they can be relit if they were destroyed.
+portal-message:
+  title: '&6Be warned!'
+  subtitle: '&6This world resets regularly!'
+  fade-in: 10
+  stay: 70
+  fade-out: 20
