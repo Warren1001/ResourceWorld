@@ -69,7 +69,7 @@ public class Gate {
 	}
 	
 	private void findPortalBlocks() {
-		boolean isX = portal.getAxis() == Axis.X;
+		boolean isX = axis == Axis.X;
 		Block startingBlock = location.getBlock();
 		for(int offsetXZ = 0; offsetXZ < 4; offsetXZ++) {
 			for(int offsetY = 0; offsetY < 5; offsetY++) {
